@@ -30,8 +30,6 @@ public enum Damageables { Sail,Flame,Nacelle}
 
 
 
-
-
 public class PlayerMovement : MonoBehaviour {
     [SerializeField]
     private float angle;
@@ -40,6 +38,12 @@ public class PlayerMovement : MonoBehaviour {
     private float speed, burner,speedMin = 0.1f,minBurn=0.01f;
     private bool isMoving,isBurning,isOff;
     private float baseSpeed,baseBurner;
+
+    [SerializeField]
+    private float minZ; //le joueur ne va pas plus bas
+
+    [SerializeField]
+    private float maxZ; // le joueur ne va pas plus haut
 
     [SerializeField]
     private Damageable[] components;
@@ -85,9 +89,15 @@ public class PlayerMovement : MonoBehaviour {
         {
             burner = 0;
         }
-        transform.position = new Vector3(newX, transform.position.y,newZ);
 
-
+        if ( newZ < minZ || newZ > maxZ)
+        {
+            transform.position = new Vector3(newX, transform.position.y, transform.position.z);
+        }
+        else
+        {
+            transform.position = new Vector3(newX, transform.position.y, newZ);
+        }
     }
 
     //Move horizontal incrémental pour gérer l'inertie
@@ -130,7 +140,6 @@ public class PlayerMovement : MonoBehaviour {
         baseBurner = _baseBurner;
     }
 
-
     public float GetCurrentDistance()
     {
         return transform.position.x;
@@ -140,4 +149,5 @@ public class PlayerMovement : MonoBehaviour {
     {
         components[(int)type].DamagesTo(ammount);
     }
+
 }

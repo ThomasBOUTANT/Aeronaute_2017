@@ -2,22 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraPlayer : MonoBehaviour {
+public class CameraPlayer : MonoBehaviour  {
 
     [SerializeField]
     private GameObject player;
 
     [SerializeField]
-    public float minZ; //la camera ne va pas plus haut
+    private float minZ; //le joueur ne va pas plus bas
 
     [SerializeField]
-    public float maxZ; // la camera ne va pas plus bas
-
+    private float maxZ; // le joueur ne va pas plus haut
 
     // Use this for initialization
     void Start () {
-		
-	}
+    }
 	
 	// Update is called once per frame
 	void Update () {
