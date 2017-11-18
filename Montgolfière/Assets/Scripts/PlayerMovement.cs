@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum Damageables { Sail, Flame, Nacelle };
-
 
 //Class générique pour gérer les valeur incrémentales par palier fixe
 [System.Serializable]
@@ -27,72 +25,117 @@ public class Incrementable
     }
 }
 
+[System.Serializable]
+public enum Damageables { Sail,Flame,Nacelle,Lest}
+
+
 
 public class PlayerMovement : MonoBehaviour {
+    [SerializeField]
+    private float angle,fioulInit,fioulConso;
+    [SerializeField]
+    private Incrementable speedIncr,burnerIncr,hotAirIncr;
+    private float speed,speedMin = 0.1f,minBurn=0.01f;
+    private bool isMoving,isBurning, isWatchingEntity;
+    [SerializeField]
+    private float baseSpeed, baseBurner,scaleAlt,baseCoefLat;
+    private float fioul,hotAir;
 
     [SerializeField]
-    private Incrementable speedIncr,burnerIncr;
-    private float speed, burner,speedMin = 0.1f,minBurn=0.01f;
-    private bool isMoving,isBurning, isOff;
-    private float baseSpeed,baseBurner;
+    private float minPlayerZ, maxPlayerZ;
 
     [SerializeField]
-    private Damageable[] components; //rouge = normal
+    private Damageable[] components;
+    private Damageable burner;
+    private Damageable lest;
+
 
     void Start () {
+        burner = components[(int)Damageables.Flame];
+        lest = components[(int)Damageables.Lest];
         isMoving = false;
         isBurning = false;
-        baseSpeed = 10;
-        baseBurner = 1;
+        isWatchingEntity = false;
+        fioul = fioulInit;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-
-        //////// Update de la position en X avec une base de *baseSpeed* avec inertie
-        float newX = transform.position.x + ((speed + baseSpeed) * Time.deltaTime);
-        if (!isMoving && Mathf.Abs(speed) > speedIncr.GetDecr())
+        if (isWatchingEntity)
         {
-            speed -= Mathf.Sign(speed) * (speedIncr.GetDecr());
-        }
-        else if(isMoving)
-        {
-        }
-        else
-        {
-            speed = 0;
-        }
-
-        //////// Update de la hauteur de la montgolfière avec le brûleur plus gravité de base 
-        float newY = transform.position.y + ((burner-baseBurner) * Time.deltaTime);
-        if (!isBurning && Mathf.Abs(burner) > burnerIncr.GetDecr())
-            { 
-
-            burner -= Mathf.Sign(burner)*burnerIncr.GetDecr();
-        }
-        else if (isBurning)
-        {
+            //Immobilisation du joueur
 
         }
         else
         {
-            burner = 0;
-        }
-        transform.position = new Vector3(newX, newY);
+            //////// Update de la position en X avec une base de *baseSpeed* avec inertie
+            float coefLest = (lest.GetHealth() + 2 + baseCoefLat) / 6;
+            float coefAlt = (transform.position.z + scaleAlt) / scaleAlt;
+            float newX = transform.position.x + ((speed * coefLest + baseSpeed * coefAlt) * Time.deltaTime);
+            transform.rotation = Quaternion.Euler(new Vector3(0.0f, 180 + speed * angle * coefLest, 0.0f));
+            if (!isMoving && Mathf.Abs(speed) > speedIncr.GetDecr())
+            {
+                speed -= Mathf.Sign(speed) * (speedIncr.GetDecr());
+            }
+            else if (isMoving)
+            {
+            }
+            else
+            {
+                speed = 0;
+            }
 
+            //////// Update de la hauteur de la montgolfière avec le brûleur plus gravité de base 
+            float newZ = transform.position.z + ((-baseBurner + hotAir) * Time.deltaTime);
+            if (!isBurning && Mathf.Abs(burner.GetHealth()) > burnerIncr.GetDecr())
+            {
+
+                burner.DamagesTo(Mathf.Sign(burner.GetHealth()) * burnerIncr.GetDecr());
+            }
+            else if (isBurning)
+            {
+
+            }
+            else
+            {
+                burner.DamagesTo(burner.GetHealth());
+            }
+
+            if(minPlayerZ > newZ || newZ > maxPlayerZ)
+            {
+                transform.position = new Vector3(newX, transform.position.y, transform.position.z);
+            }
+            else
+            {
+                transform.position = new Vector3(newX, transform.position.y, newZ);
+            }
+
+
+            if ((Mathf.Abs(hotAir) > hotAirIncr.GetDecr()) && !isBurning)
+            {
+                hotAir -= Mathf.Sign(hotAir) * (hotAirIncr.GetDecr());
+            }
+            else if (!isBurning)
+            {
+                hotAir = 0;
+            }
+        }
 
     }
 
     //Move horizontal incrémental pour gérer l'inertie
     public void Move(float _movement)
     {
-        if (Mathf.Abs(_movement) > speedMin)
+        if (Mathf.Abs(_movement) > speedMin && !isBurning)
         {
             speed += _movement * speedIncr.GetIncr();
             speed = Mathf.Sign(speed) * Mathf.Min(Mathf.Abs(speed), speedIncr.GetMax());
             isMoving = true;
         }
-        else
+        else if (isBurning)
+        {
+
+        }else
         {
             isMoving = false;
         }
@@ -100,21 +143,29 @@ public class PlayerMovement : MonoBehaviour {
     //Move vertical, gestion du bruleur incrémentale pour gérer l'inertie
     public void Burn(float _burner)
     {
-        if (Mathf.Abs(_burner) > minBurn)
+        if (fioul > 0 && _burner>0 && !isWatchingEntity)
         {
-            burner += _burner * burnerIncr.GetIncr();
-            burner = Mathf.Sign(burner) * Mathf.Min(Mathf.Abs(burner), burnerIncr.GetMax());
+
+            if (Mathf.Abs(_burner) > minBurn)
+            {
+                burner.HealTo(_burner * burnerIncr.GetIncr());
+                hotAir += hotAirIncr.GetIncr();
+                isBurning = true;
+                fioul -= fioulConso;
+            }
+            else
+            {
+                isBurning = false;
+            }
+        }else if (_burner < 0)
+        {
+            hotAir -= hotAirIncr.GetDecr();
             isBurning = true;
         }
         else
         {
             isBurning = false;
         }
-    }
-
-    public void TakeDamages(Damageables type, float damages)
-    {
-        components[(int)type].DamagesTo(damages);
     }
 
     // Setter sur baseSpeed et baseBurner pour gérer l'inertie
@@ -134,5 +185,53 @@ public class PlayerMovement : MonoBehaviour {
         return transform.position.x;
     }
 
+    public void Damages(Damageables type ,float ammount)
+    {
+        components[(int)type].DamagesTo(ammount);
+    }
 
+    public void LacherLest()
+    {
+        if (lest.GetHealth() > 0 && baseBurner>0)
+        {
+            lest.DamagesTo(1);
+            baseBurner -= 1;
+        }
+    }
+
+
+    public void Damaged(Damageables type)
+    {
+        switch (type)
+        {
+            case Damageables.Sail:
+                baseBurner++;
+                break;
+            case Damageables.Nacelle:
+                baseCoefLat--;
+                break;
+
+            case Damageables.Flame:
+                break;
+        }
+
+
+    }
+
+
+    public void SetEntityWatching(bool _isWatchingEntity)
+    {
+        isWatchingEntity = _isWatchingEntity;
+    }
+
+
+    public float GetMinPlayerZ()
+    {
+        return minPlayerZ;
+    }
+
+    public float GetMaxPlayerZ()
+    {
+        return maxPlayerZ;
+    }
 }

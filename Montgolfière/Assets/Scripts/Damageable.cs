@@ -3,23 +3,44 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-[System.Serializable]
-public class Damageable {
+//[System.Serializable]
+public class Damageable : MonoBehaviour {
+
 
     [SerializeField]
-    float healthPoints;
+    private Damageables type;
+    [SerializeField]
+    private float healthPoints, maxHealtPoints,minHealthPoints;
 
     [SerializeField]
-    float maxHealtPoints;
+    private float[] stages;
+
+    [SerializeField]
+    private Material[] stagesSprites;
+
+    [SerializeField]
+    private PlayerMovement player;
+
+    //Etat de la montgolfière : 0 = intact, 1 = damaged, 2 = broken
+    int state;
 
 	// Use this for initialization
 	void Start () {
-		
+        state = 0;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		
+        
+        //Changements d'états qui conduiront à un changment de sprite
+        if((state<stages.Length) && (healthPoints < stages[state]))
+        {
+            Debug.Log(stages[0]);
+            ChoseSprite(state);
+            state++;
+            player.Damaged(type);
+
+        }
 	}
 
     public void HealTo(float heal)
@@ -28,10 +49,24 @@ public class Damageable {
         {
             healthPoints = healthPoints + heal;
         }
+        else
+        {
+            healthPoints = maxHealtPoints;
+        }
     }
 
     public void DamagesTo(float damages)
     {
-        healthPoints = healthPoints - damages;
+        healthPoints = Mathf.Max(healthPoints - damages,minHealthPoints);
+    }
+
+    public void ChoseSprite(int _state)
+    {
+        GetComponent<Renderer>().material = stagesSprites[_state];
+    }
+
+    public float GetHealth()
+    {
+        return healthPoints;
     }
 }
