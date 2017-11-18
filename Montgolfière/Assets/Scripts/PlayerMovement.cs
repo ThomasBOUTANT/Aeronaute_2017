@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum Damageables { Sail, Flame, Nacelle };
-
 
 //Class générique pour gérer les valeur incrémentales par palier fixe
 [System.Serializable]
@@ -27,22 +25,30 @@ public class Incrementable
     }
 }
 
+[System.Serializable]
+public enum Damageables { Sail,Flame,Nacelle}
+
+
+
+
 
 public class PlayerMovement : MonoBehaviour {
-
+    [SerializeField]
+    private float angle;
     [SerializeField]
     private Incrementable speedIncr,burnerIncr;
     private float speed, burner,speedMin = 0.1f,minBurn=0.01f;
-    private bool isMoving,isBurning, isOff;
+    private bool isMoving,isBurning,isOff;
     private float baseSpeed,baseBurner;
 
     [SerializeField]
-    private Damageable[] components; //rouge = normal
+    private Damageable[] components;
+
 
     void Start () {
         isMoving = false;
         isBurning = false;
-        baseSpeed = 10;
+        baseSpeed = 25;
         baseBurner = 1;
 	}
 	
@@ -51,6 +57,7 @@ public class PlayerMovement : MonoBehaviour {
 
         //////// Update de la position en X avec une base de *baseSpeed* avec inertie
         float newX = transform.position.x + ((speed + baseSpeed) * Time.deltaTime);
+        transform.rotation = Quaternion.Euler(new Vector3(0.0f, 180 + speed * angle, 0.0f));
         if (!isMoving && Mathf.Abs(speed) > speedIncr.GetDecr())
         {
             speed -= Mathf.Sign(speed) * (speedIncr.GetDecr());
@@ -64,7 +71,7 @@ public class PlayerMovement : MonoBehaviour {
         }
 
         //////// Update de la hauteur de la montgolfière avec le brûleur plus gravité de base 
-        float newY = transform.position.y + ((burner-baseBurner) * Time.deltaTime);
+        float newZ = transform.position.z + ((burner-baseBurner) * Time.deltaTime);
         if (!isBurning && Mathf.Abs(burner) > burnerIncr.GetDecr())
             { 
 
@@ -78,7 +85,7 @@ public class PlayerMovement : MonoBehaviour {
         {
             burner = 0;
         }
-        transform.position = new Vector3(newX, newY);
+        transform.position = new Vector3(newX, transform.position.y,newZ);
 
 
     }
@@ -112,11 +119,6 @@ public class PlayerMovement : MonoBehaviour {
         }
     }
 
-    public void TakeDamages(Damageables type, float damages)
-    {
-        components[(int)type].DamagesTo(damages);
-    }
-
     // Setter sur baseSpeed et baseBurner pour gérer l'inertie
     public void SetBaseSpeed(float _baseSpeed)
     {
@@ -134,5 +136,8 @@ public class PlayerMovement : MonoBehaviour {
         return transform.position.x;
     }
 
-
+    public void Damages(Damageables type ,float ammount)
+    {
+        components[(int)type].DamagesTo(ammount);
+    }
 }
