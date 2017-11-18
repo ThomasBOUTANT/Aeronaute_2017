@@ -32,12 +32,12 @@ public enum Damageables { Sail,Flame,Nacelle}
 
 public class PlayerMovement : MonoBehaviour {
     [SerializeField]
-    private float angle;
+    private float angle,fioulInit,fioulConso;
     [SerializeField]
     private Incrementable speedIncr,burnerIncr;
     private float speed, burner,speedMin = 0.1f,minBurn=0.01f;
     private bool isMoving,isBurning,isOff;
-    private float baseSpeed,baseBurner;
+    private float baseSpeed,baseBurner,fioul;
 
 
     [SerializeField]
@@ -49,6 +49,7 @@ public class PlayerMovement : MonoBehaviour {
         isBurning = false;
         baseSpeed = 25;
         baseBurner = 1;
+        fioul = fioulInit;
 	}
 	
 	// Update is called once per frame
@@ -106,7 +107,21 @@ public class PlayerMovement : MonoBehaviour {
     //Move vertical, gestion du bruleur incrémentale pour gérer l'inertie
     public void Burn(float _burner)
     {
-        if (Mathf.Abs(_burner) > minBurn)
+        if (fioul > 0 && _burner>0)
+        {
+
+            if (Mathf.Abs(_burner) > minBurn)
+            {
+                burner += _burner * burnerIncr.GetIncr();
+                burner = Mathf.Sign(burner) * Mathf.Min(Mathf.Abs(burner), burnerIncr.GetMax());
+                isBurning = true;
+                fioul -= fioulConso;
+            }
+            else
+            {
+                isBurning = false;
+            }
+        }else if (_burner < 0)
         {
             burner += _burner * burnerIncr.GetIncr();
             burner = Mathf.Sign(burner) * Mathf.Min(Mathf.Abs(burner), burnerIncr.GetMax());

@@ -316,14 +316,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   angle: 0.2
+  fioulInit: 100
+  fioulConso: 1
   speedIncr:
     incr: 2
     decr: 2
     max: 20
   burnerIncr:
-    incr: 2
-    decr: 1
-    max: 20
+    incr: 6
+    decr: 0.5
+    max: 24
   components:
   - {fileID: 1927486255}
 --- !u!4 &453723586
@@ -416,7 +418,7 @@ MonoBehaviour:
   typeDamagables: 0
   damages: 20
   delayDamages: 1
-  type: 0
+  type: 1
   baseSpeed: 5
 --- !u!23 &885586841
 MeshRenderer:
