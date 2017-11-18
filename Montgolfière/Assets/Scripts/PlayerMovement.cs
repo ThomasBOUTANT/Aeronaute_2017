@@ -36,11 +36,13 @@ public class PlayerMovement : MonoBehaviour {
     [SerializeField]
     private Incrementable speedIncr,burnerIncr,hotAirIncr;
     private float speed,speedMin = 0.1f,minBurn=0.01f;
-    private bool isMoving,isBurning,isOff;
+    private bool isMoving,isBurning, isWatchingEntity;
     [SerializeField]
-    private float baseSpeed, baseBurner,scaleAlt;
+    private float baseSpeed, baseBurner,scaleAlt,baseCoefLat;
     private float fioul,hotAir;
 
+    [SerializeField]
+    private float minPlayerZ, maxPlayerZ;
 
     [SerializeField]
     private Damageable[] components;
@@ -53,53 +55,70 @@ public class PlayerMovement : MonoBehaviour {
         lest = components[(int)Damageables.Lest];
         isMoving = false;
         isBurning = false;
+        isWatchingEntity = false;
         fioul = fioulInit;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-
-        //////// Update de la position en X avec une base de *baseSpeed* avec inertie
-        float coefLest = (lest.GetHealth()+2) / 6;
-        float coefAlt = (transform.position.z + scaleAlt) / scaleAlt;
-        float newX = transform.position.x + ((speed*coefLest + baseSpeed*coefAlt) * Time.deltaTime);
-        transform.rotation = Quaternion.Euler(new Vector3(0.0f, 180 + speed * angle*coefLest, 0.0f));
-        if (!isMoving && Mathf.Abs(speed) > speedIncr.GetDecr())
+        if (isWatchingEntity)
         {
-            speed -= Mathf.Sign(speed) * (speedIncr.GetDecr());
-        }
-        else if(isMoving)
-        {
-        }
-        else
-        {
-            speed = 0;
-        }
-
-        //////// Update de la hauteur de la montgolfière avec le brûleur plus gravité de base 
-        float newZ = transform.position.z + ((-baseBurner+hotAir) * Time.deltaTime);
-        if (!isBurning && Mathf.Abs(burner.GetHealth()) > burnerIncr.GetDecr())
-            { 
-
-            burner.DamagesTo(Mathf.Sign(burner.GetHealth())*burnerIncr.GetDecr());
-        }
-        else if (isBurning)
-        {
+            //Immobilisation du joueur
 
         }
         else
         {
-            burner.DamagesTo(burner.GetHealth());
-        }
-        transform.position = new Vector3(newX, transform.position.y,newZ);
+            //////// Update de la position en X avec une base de *baseSpeed* avec inertie
+            float coefLest = (lest.GetHealth() + 2 + baseCoefLat) / 6;
+            float coefAlt = (transform.position.z + scaleAlt) / scaleAlt;
+            float newX = transform.position.x + ((speed * coefLest + baseSpeed * coefAlt) * Time.deltaTime);
+            transform.rotation = Quaternion.Euler(new Vector3(0.0f, 180 + speed * angle * coefLest, 0.0f));
+            if (!isMoving && Mathf.Abs(speed) > speedIncr.GetDecr())
+            {
+                speed -= Mathf.Sign(speed) * (speedIncr.GetDecr());
+            }
+            else if (isMoving)
+            {
+            }
+            else
+            {
+                speed = 0;
+            }
 
-        if ((Mathf.Abs(hotAir) > hotAirIncr.GetDecr()) && !isBurning)
-        {
-            hotAir -= Mathf.Sign(hotAir) * (hotAirIncr.GetDecr());
-        }
-        else if(!isBurning)
-        {
-            hotAir = 0;
+            //////// Update de la hauteur de la montgolfière avec le brûleur plus gravité de base 
+            float newZ = transform.position.z + ((-baseBurner + hotAir) * Time.deltaTime);
+            if (!isBurning && Mathf.Abs(burner.GetHealth()) > burnerIncr.GetDecr())
+            {
+
+                burner.DamagesTo(Mathf.Sign(burner.GetHealth()) * burnerIncr.GetDecr());
+            }
+            else if (isBurning)
+            {
+
+            }
+            else
+            {
+                burner.DamagesTo(burner.GetHealth());
+            }
+
+            if(minPlayerZ > newZ || newZ > maxPlayerZ)
+            {
+                transform.position = new Vector3(newX, transform.position.y, transform.position.z);
+            }
+            else
+            {
+                transform.position = new Vector3(newX, transform.position.y, newZ);
+            }
+
+
+            if ((Mathf.Abs(hotAir) > hotAirIncr.GetDecr()) && !isBurning)
+            {
+                hotAir -= Mathf.Sign(hotAir) * (hotAirIncr.GetDecr());
+            }
+            else if (!isBurning)
+            {
+                hotAir = 0;
+            }
         }
 
     }
@@ -124,7 +143,7 @@ public class PlayerMovement : MonoBehaviour {
     //Move vertical, gestion du bruleur incrémentale pour gérer l'inertie
     public void Burn(float _burner)
     {
-        if (fioul > 0 && _burner>0)
+        if (fioul > 0 && _burner>0 && !isWatchingEntity)
         {
 
             if (Mathf.Abs(_burner) > minBurn)
@@ -189,14 +208,30 @@ public class PlayerMovement : MonoBehaviour {
                 baseBurner++;
                 break;
             case Damageables.Nacelle:
-
+                baseCoefLat--;
                 break;
 
             case Damageables.Flame:
-
                 break;
         }
 
 
+    }
+
+
+    public void SetEntityWatching(bool _isWatchingEntity)
+    {
+        isWatchingEntity = _isWatchingEntity;
+    }
+
+
+    public float GetMinPlayerZ()
+    {
+        return minPlayerZ;
+    }
+
+    public float GetMaxPlayerZ()
+    {
+        return maxPlayerZ;
     }
 }

@@ -35,6 +35,7 @@ public class Damageable : MonoBehaviour {
         //Changements d'états qui conduiront à un changment de sprite
         if((state<stages.Length) && (healthPoints < stages[state]))
         {
+            Debug.Log(stages[0]);
             ChoseSprite(state);
             state++;
             player.Damaged(type);

@@ -53,6 +53,8 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\CameraPlayer.cs" />
      <Compile Include="Assets\Scripts\Damageable.cs" />
+     <Compile Include="Assets\Scripts\EntitiesManager.cs" />
+     <Compile Include="Assets\Scripts\Entity.cs" />
      <Compile Include="Assets\Scripts\InputManager.cs" />
      <Compile Include="Assets\Scripts\Intemperie.cs" />
      <Compile Include="Assets\Scripts\MenuManager.cs" />
