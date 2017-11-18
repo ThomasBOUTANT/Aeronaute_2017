@@ -34,10 +34,14 @@ public class PlayerMovement : MonoBehaviour {
     [SerializeField]
     private float angle,fioulInit,fioulConso;
     [SerializeField]
-    private Incrementable speedIncr,burnerIncr;
-    private float speed, burner,speedMin = 0.1f,minBurn=0.01f;
+    private Incrementable speedIncr,burnerIncr,hotAirIncr;
+    private float speed,speedMin = 0.1f,minBurn=0.01f;
     private bool isMoving,isBurning,isOff;
-    private float baseSpeed,baseBurner,fioul;
+    [SerializeField]
+    private float baseSpeed,baseBurner,fioul,hotAir;
+
+    [SerializeField]
+    private Damageable burner;
 
 
     [SerializeField]
@@ -71,11 +75,11 @@ public class PlayerMovement : MonoBehaviour {
         }
 
         //////// Update de la hauteur de la montgolfière avec le brûleur plus gravité de base 
-        float newZ = transform.position.z + ((burner-baseBurner) * Time.deltaTime);
-        if (!isBurning && Mathf.Abs(burner) > burnerIncr.GetDecr())
+        float newZ = transform.position.z + ((-baseBurner+hotAir) * Time.deltaTime);
+        if (!isBurning && Mathf.Abs(burner.GetHealth()) > burnerIncr.GetDecr())
             { 
 
-            burner -= Mathf.Sign(burner)*burnerIncr.GetDecr();
+            burner.DamagesTo(Mathf.Sign(burner.GetHealth())*burnerIncr.GetDecr());
         }
         else if (isBurning)
         {
@@ -83,23 +87,34 @@ public class PlayerMovement : MonoBehaviour {
         }
         else
         {
-            burner = 0;
+            burner.DamagesTo(burner.GetHealth());
         }
         transform.position = new Vector3(newX, transform.position.y,newZ);
 
+        if ((Mathf.Abs(hotAir) > hotAirIncr.GetDecr()) && !isBurning)
+        {
+            hotAir -= Mathf.Sign(hotAir) * (hotAirIncr.GetDecr());
+        }
+        else if(!isBurning)
+        {
+            hotAir = 0;
+        }
 
     }
 
     //Move horizontal incrémental pour gérer l'inertie
     public void Move(float _movement)
     {
-        if (Mathf.Abs(_movement) > speedMin)
+        if (Mathf.Abs(_movement) > speedMin && !isBurning)
         {
             speed += _movement * speedIncr.GetIncr();
             speed = Mathf.Sign(speed) * Mathf.Min(Mathf.Abs(speed), speedIncr.GetMax());
             isMoving = true;
         }
-        else
+        else if (isBurning)
+        {
+
+        }else
         {
             isMoving = false;
         }
@@ -112,8 +127,8 @@ public class PlayerMovement : MonoBehaviour {
 
             if (Mathf.Abs(_burner) > minBurn)
             {
-                burner += _burner * burnerIncr.GetIncr();
-                burner = Mathf.Sign(burner) * Mathf.Min(Mathf.Abs(burner), burnerIncr.GetMax());
+                burner.HealTo(_burner * burnerIncr.GetIncr());
+                hotAir += hotAirIncr.GetIncr();
                 isBurning = true;
                 fioul -= fioulConso;
             }
@@ -123,8 +138,7 @@ public class PlayerMovement : MonoBehaviour {
             }
         }else if (_burner < 0)
         {
-            burner += _burner * burnerIncr.GetIncr();
-            burner = Mathf.Sign(burner) * Mathf.Min(Mathf.Abs(burner), burnerIncr.GetMax());
+            hotAir -= hotAirIncr.GetDecr();
             isBurning = true;
         }
         else

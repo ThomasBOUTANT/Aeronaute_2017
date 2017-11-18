@@ -288,8 +288,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 723559f281bb84f4da8572939222289e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthPoints: 100
+  healthPoints: 0
   maxHealtPoints: 100
+  minHealthPoints: -100
   stages:
   - 100
   stagesSprites:
@@ -342,8 +343,17 @@ MonoBehaviour:
     max: 20
   burnerIncr:
     incr: 2
-    decr: 1
+    decr: 0.5
     max: 20
+  hotAirIncr:
+    incr: 2
+    decr: 1
+    max: 10
+  baseSpeed: 0
+  baseBurner: 0
+  fioul: 0
+  hotAir: 0
+  burner: {fileID: 120544662}
   components:
   - {fileID: 1927486255}
   - {fileID: 120544662}
@@ -511,6 +521,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthPoints: 100
   maxHealtPoints: 100
+  minHealthPoints: 0
   stages:
   - 100
   stagesSprites:
@@ -655,7 +666,7 @@ Light:
   m_SpotAngle: 30
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 2
+    m_Type: 0
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -804,6 +815,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthPoints: 100
   maxHealtPoints: 100
+  minHealthPoints: 0
   stages:
   - 70
   - 40
