@@ -32,12 +32,15 @@ public enum Damageables { Sail,Flame,Nacelle}
 
 public class PlayerMovement : MonoBehaviour {
     [SerializeField]
-    private float angle;
+    private float angle,fioulInit,fioulConso;
     [SerializeField]
     private Incrementable speedIncr,burnerIncr;
     private float speed, burner,speedMin = 0.1f,minBurn=0.01f;
     private bool isMoving,isBurning,isOff;
-    private float baseSpeed,baseBurner;
+    private float baseSpeed,baseBurner,fioul;
+    
+    [SerializeField]
+    private Damageable[] components;
 
     [SerializeField]
     private float minZ; //le joueur ne va pas plus bas
@@ -45,15 +48,13 @@ public class PlayerMovement : MonoBehaviour {
     [SerializeField]
     private float maxZ; // le joueur ne va pas plus haut
 
-    [SerializeField]
-    private Damageable[] components;
-
 
     void Start () {
         isMoving = false;
         isBurning = false;
         baseSpeed = 25;
         baseBurner = 1;
+        fioul = fioulInit;
 	}
 	
 	// Update is called once per frame
@@ -90,7 +91,7 @@ public class PlayerMovement : MonoBehaviour {
             burner = 0;
         }
 
-        if ( newZ < minZ || newZ > maxZ)
+        if (newZ < minZ || newZ > maxZ)
         {
             transform.position = new Vector3(newX, transform.position.y, transform.position.z);
         }
@@ -98,6 +99,7 @@ public class PlayerMovement : MonoBehaviour {
         {
             transform.position = new Vector3(newX, transform.position.y, newZ);
         }
+
     }
 
     //Move horizontal incrémental pour gérer l'inertie
@@ -117,7 +119,21 @@ public class PlayerMovement : MonoBehaviour {
     //Move vertical, gestion du bruleur incrémentale pour gérer l'inertie
     public void Burn(float _burner)
     {
-        if (Mathf.Abs(_burner) > minBurn)
+        if (fioul > 0 && _burner>0)
+        {
+
+            if (Mathf.Abs(_burner) > minBurn)
+            {
+                burner += _burner * burnerIncr.GetIncr();
+                burner = Mathf.Sign(burner) * Mathf.Min(Mathf.Abs(burner), burnerIncr.GetMax());
+                isBurning = true;
+                fioul -= fioulConso;
+            }
+            else
+            {
+                isBurning = false;
+            }
+        }else if (_burner < 0)
         {
             burner += _burner * burnerIncr.GetIncr();
             burner = Mathf.Sign(burner) * Mathf.Min(Mathf.Abs(burner), burnerIncr.GetMax());
@@ -139,7 +155,7 @@ public class PlayerMovement : MonoBehaviour {
     {
         baseBurner = _baseBurner;
     }
-
+    
     public float GetCurrentDistance()
     {
         return transform.position.x;
@@ -150,4 +166,13 @@ public class PlayerMovement : MonoBehaviour {
         components[(int)type].DamagesTo(ammount);
     }
 
+    public float GetMinPlayerZ()
+    {
+        return minZ;
+    }
+
+    public float GetMaxPlayerZ()
+    {
+        return maxZ;
+    }
 }

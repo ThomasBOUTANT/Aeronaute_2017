@@ -7,14 +7,13 @@ public class CameraPlayer : MonoBehaviour  {
     [SerializeField]
     private GameObject player;
 
-    [SerializeField]
-    private float minZ; //le joueur ne va pas plus bas
-
-    [SerializeField]
-    private float maxZ; // le joueur ne va pas plus haut
+    private float minCameraZ; //la camera ne va pas plus bas
+    private float maxCameraZ; // la camera ne va pas plus haut
 
     // Use this for initialization
     void Start () {
+        minCameraZ = player.GetComponent<PlayerMovement>().GetMinPlayerZ();
+        maxCameraZ = player.GetComponent<PlayerMovement>().GetMaxPlayerZ();
     }
 	
 	// Update is called once per frame
@@ -22,7 +21,7 @@ public class CameraPlayer : MonoBehaviour  {
         float newX = player.transform.position.x;
         float newZ = player.transform.position.z;
 
-        if ( newZ < minZ || newZ > maxZ)
+        if ( newZ < minCameraZ || newZ > maxCameraZ)
         {
             transform.position = new Vector3(newX, transform.position.y, transform.position.z);
         }
