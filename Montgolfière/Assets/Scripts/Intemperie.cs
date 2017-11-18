@@ -52,17 +52,17 @@ public class Intemperie : MonoBehaviour {
                 switch (heightCoef)
                 {
                     case -1:
-                        player.Damages(typeDamagables, -damages * (-player.GetHeight() + player.GetMaxPlayerZ()) / (player.GetMaxPlayerZ() - player.GetMinPlayerZ()));
+                        player.Damages(typeDamagables, -damages *2* (-player.GetHeight() + player.GetMaxPlayerZ()) / (player.GetMaxPlayerZ() - player.GetMinPlayerZ()));
                         break;
 
 
                     case 0:
-
+                        player.Damages(typeDamagables, damages*2);
                         break;
 
 
                     case 1:
-                        player.Damages(typeDamagables, damages * (player.GetHeight() - player.GetMinPlayerZ()) / (player.GetMaxPlayerZ() - player.GetMinPlayerZ()));
+                        player.Damages(typeDamagables, 2*damages * (player.GetHeight() - player.GetMinPlayerZ()) / (player.GetMaxPlayerZ() - player.GetMinPlayerZ()));
 
                         break;
                 }
@@ -77,7 +77,7 @@ public class Intemperie : MonoBehaviour {
 
 
                     case 0:
-
+                        player.Damages(typeDamagables, damages);
                         break;
 
 

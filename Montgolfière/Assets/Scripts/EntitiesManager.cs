@@ -76,6 +76,7 @@ public class EntitiesManager : MonoBehaviour {
                     {
                         //Pacte avec l'entité
                         entities[j].GetComponent<Entity>().SetIsFriend(-1);
+                        player.GetComponent<PlayerMovement>().Inclination(-1);
                         player.GetComponent<PlayerMovement>().SetEntityWatching(false);
                         entities[j].GetComponent<Entity>().DisableText();
                     }
@@ -83,9 +84,14 @@ public class EntitiesManager : MonoBehaviour {
                     {
                         //Pas de pacte avec l'entité
                         entities[j].GetComponent<Entity>().SetIsFriend(1);
+                        player.GetComponent<PlayerMovement>().Inclination(1);
                         player.GetComponent<PlayerMovement>().SetEntityWatching(false);
                         entities[j].GetComponent<Entity>().DisableText();
                     }
+                }
+                else if (entities[j].GetComponent<Entity>().IsFriend() != 0)
+                {
+                    entities[j].GetComponent<Entity>().Disappear();
                 }
             }
             

@@ -49,6 +49,8 @@ public class PlayerMovement : MonoBehaviour {
     private Damageable burner;
     private Damageable lest;
 
+    private int result;
+
 
     void Start () {
         burner = components[(int)Damageables.Flame];
@@ -242,4 +244,9 @@ public class PlayerMovement : MonoBehaviour {
     }
 
 
+
+    public void Inclination(int _i)
+    {
+        result += _i;
+    }
 }
