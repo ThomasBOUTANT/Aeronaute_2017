@@ -16,6 +16,12 @@ public class Entity : MonoBehaviour {
     [SerializeField]
     private GameObject givenComponent, entityText;
 
+
+    [SerializeField]
+    private WeatherManager wheaterManager;
+
+    [SerializeField]
+    private Intemperie intemperie;
     //Position du joueur par rapport à l'entité : 0 - neutre / 1 - Sans pacte / -1 - Avec Pacte
     [SerializeField]
     private int isFriend;
@@ -48,6 +54,15 @@ public class Entity : MonoBehaviour {
     public void SetIsFriend(int _isFriend)
     {
         isFriend = _isFriend;
+        if (_isFriend == 1)
+        {
+            intemperie.Disable();
+            wheaterManager.Boost(type);
+        }
+        else
+        {
+            intemperie.Boost();
+        }
     }
 
     public float GetStayingTime()

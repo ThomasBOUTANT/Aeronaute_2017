@@ -103,6 +103,7 @@ public class PlayerMovement : MonoBehaviour {
 
             if(minPlayerZ > newZ || newZ > maxPlayerZ)
             {
+                hotAir = 0;
                 transform.position = new Vector3(newX, transform.position.y, transform.position.z);
             }
             else
@@ -234,4 +235,11 @@ public class PlayerMovement : MonoBehaviour {
     {
         return maxPlayerZ;
     }
+
+    public float GetHeight()
+    {
+        return transform.position.z;
+    }
+
+
 }

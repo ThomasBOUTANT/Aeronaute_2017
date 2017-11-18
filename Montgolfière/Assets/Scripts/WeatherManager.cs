@@ -9,6 +9,9 @@ public class WeatherManager : MonoBehaviour {
     private GameObject[] intemperies;
     private int nb_intemperies;
 
+    [SerializeField]
+    private bool[] boosted;
+
     private float currentDistance;
 
     GameObject player;
@@ -56,6 +59,10 @@ public class WeatherManager : MonoBehaviour {
             {
                 //On active l'intempérie à l'endroit du joueur
                 intemperies[j].SetActive(true);
+                if (boosted[(int)intemperies[j].GetComponent<Intemperie>().GetWeatherType()])
+                {
+                    intemperies[j].GetComponent<Intemperie>().Boost();
+                }
                 i = j;
                 break;
             }
@@ -78,6 +85,12 @@ public class WeatherManager : MonoBehaviour {
             }
         }
         return i;
+    }
+
+
+    public void Boost(WeatherType _type)
+    {
+        boosted[(int)_type] = true;
     }
 
 
