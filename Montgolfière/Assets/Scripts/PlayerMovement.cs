@@ -26,7 +26,7 @@ public class Incrementable
 }
 
 [System.Serializable]
-public enum Damageables { Sail,Flame,Nacelle}
+public enum Damageables { Sail,Flame,Nacelle,Lest}
 
 
 
@@ -38,21 +38,21 @@ public class PlayerMovement : MonoBehaviour {
     private float speed,speedMin = 0.1f,minBurn=0.01f;
     private bool isMoving,isBurning,isOff;
     [SerializeField]
-    private float baseSpeed,baseBurner,fioul,hotAir;
-
-    [SerializeField]
-    private Damageable burner;
+    private float baseSpeed, baseBurner,scaleAlt;
+    private float fioul,hotAir;
 
 
     [SerializeField]
     private Damageable[] components;
+    private Damageable burner;
+    private Damageable lest;
 
 
     void Start () {
+        burner = components[(int)Damageables.Flame];
+        lest = components[(int)Damageables.Lest];
         isMoving = false;
         isBurning = false;
-        baseSpeed = 25;
-        baseBurner = 1;
         fioul = fioulInit;
 	}
 	
@@ -60,8 +60,10 @@ public class PlayerMovement : MonoBehaviour {
 	void Update () {
 
         //////// Update de la position en X avec une base de *baseSpeed* avec inertie
-        float newX = transform.position.x + ((speed + baseSpeed) * Time.deltaTime);
-        transform.rotation = Quaternion.Euler(new Vector3(0.0f, 180 + speed * angle, 0.0f));
+        float coefLest = (lest.GetHealth()+2) / 6;
+        float coefAlt = (transform.position.z + scaleAlt) / scaleAlt;
+        float newX = transform.position.x + ((speed*coefLest + baseSpeed*coefAlt) * Time.deltaTime);
+        transform.rotation = Quaternion.Euler(new Vector3(0.0f, 180 + speed * angle*coefLest, 0.0f));
         if (!isMoving && Mathf.Abs(speed) > speedIncr.GetDecr())
         {
             speed -= Mathf.Sign(speed) * (speedIncr.GetDecr());
@@ -167,5 +169,34 @@ public class PlayerMovement : MonoBehaviour {
     public void Damages(Damageables type ,float ammount)
     {
         components[(int)type].DamagesTo(ammount);
+    }
+
+    public void LacherLest()
+    {
+        if (lest.GetHealth() > 0 && baseBurner>0)
+        {
+            lest.DamagesTo(1);
+            baseBurner -= 1;
+        }
+    }
+
+
+    public void Damaged(Damageables type)
+    {
+        switch (type)
+        {
+            case Damageables.Sail:
+                baseBurner++;
+                break;
+            case Damageables.Nacelle:
+
+                break;
+
+            case Damageables.Flame:
+
+                break;
+        }
+
+
     }
 }

@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class InputManager : MonoBehaviour {
-
+    [SerializeField]
+    private float delayLest;
+    private float timerLest;
 	// Use this for initialization
 	void Start () {
-		
+        timerLest = Time.time;
 	}
 	
 	// Update is called once per frame
@@ -16,5 +18,11 @@ public class InputManager : MonoBehaviour {
 
         float moveVertical = Input.GetAxis("Vertical");
         GetComponent<PlayerMovement>().Burn(moveVertical);
+
+        if (Input.GetButton("Fire1") && timerLest < Time.time)
+        {
+            GetComponent<PlayerMovement>().LacherLest();
+            timerLest = Time.time + delayLest;
+        }
     }
 }

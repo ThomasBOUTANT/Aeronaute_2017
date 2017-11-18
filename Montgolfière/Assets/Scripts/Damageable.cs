@@ -6,6 +6,9 @@ using UnityEngine;
 //[System.Serializable]
 public class Damageable : MonoBehaviour {
 
+
+    [SerializeField]
+    private Damageables type;
     [SerializeField]
     private float healthPoints, maxHealtPoints,minHealthPoints;
 
@@ -14,6 +17,9 @@ public class Damageable : MonoBehaviour {
 
     [SerializeField]
     private Material[] stagesSprites;
+
+    [SerializeField]
+    private PlayerMovement player;
 
     //Etat de la montgolfière : 0 = intact, 1 = damaged, 2 = broken
     int state;
@@ -27,10 +33,11 @@ public class Damageable : MonoBehaviour {
 	void Update () {
         
         //Changements d'états qui conduiront à un changment de sprite
-        if(state<stages.Length && healthPoints < stages[state])
+        if((state<stages.Length) && (healthPoints < stages[state]))
         {
             ChoseSprite(state);
             state++;
+            player.Damaged(type);
 
         }
 	}

@@ -288,6 +288,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 723559f281bb84f4da8572939222289e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 1
   healthPoints: 0
   maxHealtPoints: 100
   minHealthPoints: -100
@@ -295,6 +296,7 @@ MonoBehaviour:
   - 100
   stagesSprites:
   - {fileID: 2100000, guid: ff00351fe958f8a47ba5b5f262b9612a, type: 2}
+  player: {fileID: 453723585}
 --- !u!1 &453723583
 GameObject:
   m_ObjectHideFlags: 0
@@ -323,6 +325,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec38305af1bfedb438937ded68f1d8e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  delayLest: 1
 --- !u!114 &453723585
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -349,15 +352,14 @@ MonoBehaviour:
     incr: 2
     decr: 1
     max: 10
-  baseSpeed: 0
-  baseBurner: 0
-  fioul: 0
-  hotAir: 0
-  burner: {fileID: 120544662}
+  baseSpeed: 25
+  baseBurner: 2
+  scaleAlt: 90
   components:
   - {fileID: 1927486255}
   - {fileID: 120544662}
   - {fileID: 782344215}
+  - {fileID: 854267890}
 --- !u!4 &453723586
 Transform:
   m_ObjectHideFlags: 0
@@ -371,6 +373,7 @@ Transform:
   - {fileID: 1927486254}
   - {fileID: 120544658}
   - {fileID: 782344211}
+  - {fileID: 854267894}
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
@@ -519,6 +522,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 723559f281bb84f4da8572939222289e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 2
   healthPoints: 100
   maxHealtPoints: 100
   minHealthPoints: 0
@@ -526,6 +530,114 @@ MonoBehaviour:
   - 100
   stagesSprites:
   - {fileID: 2100000, guid: 42898213550eb694d8a1dccc3ab8f835, type: 2}
+  player: {fileID: 453723585}
+--- !u!1 &854267889
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 854267894}
+  - component: {fileID: 854267893}
+  - component: {fileID: 854267892}
+  - component: {fileID: 854267891}
+  - component: {fileID: 854267890}
+  m_Layer: 0
+  m_Name: Lest
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &854267890
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 854267889}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 723559f281bb84f4da8572939222289e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 3
+  healthPoints: 4
+  maxHealtPoints: 4
+  minHealthPoints: 0
+  stages:
+  - 4
+  - 3
+  stagesSprites:
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 0}
+  player: {fileID: 453723585}
+--- !u!23 &854267891
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 854267889}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_Materials:
+  - {fileID: 2100000, guid: 42898213550eb694d8a1dccc3ab8f835, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 1
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!64 &854267892
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 854267889}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Convex: 0
+  m_InflateMesh: 0
+  m_SkinWidth: 0.01
+  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!33 &854267893
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 854267889}
+  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &854267894
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 854267889}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -6, y: 0, z: 0}
+  m_LocalScale: {x: 0.29999998, y: 0.29999998, z: 0.29999998}
+  m_Children: []
+  m_Father: {fileID: 453723586}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &885586839 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1212631707385002, guid: 1c53b0273f5f4fc4b979f9110ad3a61b,
@@ -813,6 +925,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 723559f281bb84f4da8572939222289e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 0
   healthPoints: 100
   maxHealtPoints: 100
   minHealthPoints: 0
@@ -822,6 +935,7 @@ MonoBehaviour:
   stagesSprites:
   - {fileID: 2100000, guid: 6fdfd769fe590874186da2d902c567d7, type: 2}
   - {fileID: 2100000, guid: 229fae6657c3641449eb27c7a321f22c, type: 2}
+  player: {fileID: 453723585}
 --- !u!23 &1927486256
 MeshRenderer:
   m_ObjectHideFlags: 0
