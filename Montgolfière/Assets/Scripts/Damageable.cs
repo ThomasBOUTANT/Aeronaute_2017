@@ -7,7 +7,7 @@ using UnityEngine;
 public class Damageable : MonoBehaviour {
 
     [SerializeField]
-    private float healthPoints, maxHealtPoints;
+    private float healthPoints, maxHealtPoints,minHealthPoints;
 
     [SerializeField]
     private float[] stages;
@@ -41,15 +41,24 @@ public class Damageable : MonoBehaviour {
         {
             healthPoints = healthPoints + heal;
         }
+        else
+        {
+            healthPoints = maxHealtPoints;
+        }
     }
 
     public void DamagesTo(float damages)
     {
-        healthPoints = healthPoints - damages;
+        healthPoints = Mathf.Max(healthPoints - damages,minHealthPoints);
     }
 
     public void ChoseSprite(int _state)
     {
         GetComponent<Renderer>().material = stagesSprites[_state];
+    }
+
+    public float GetHealth()
+    {
+        return healthPoints;
     }
 }

@@ -2,26 +2,32 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraPlayer : MonoBehaviour  {
+public class CameraPlayer : MonoBehaviour
+{
 
     [SerializeField]
     private GameObject player;
 
-    private float minCameraZ; //la camera ne va pas plus bas
-    private float maxCameraZ; // la camera ne va pas plus haut
+    private float minCameraZ; //la camera ne va pas plus haut 
+    private float maxCameraZ; // la camera ne va pas plus bas 
 
-    // Use this for initialization
-    void Start () {
-        minCameraZ = player.GetComponent<PlayerMovement>().GetMinPlayerZ();
-        maxCameraZ = player.GetComponent<PlayerMovement>().GetMaxPlayerZ();
+    [SerializeField]
+    private float marginCameraZ;
+
+    // Use this for initialization 
+    void Start()
+    {
+        minCameraZ = player.GetComponent<PlayerMovement>().GetMinPlayerZ() + marginCameraZ;
+        maxCameraZ = player.GetComponent<PlayerMovement>().GetMaxPlayerZ() - marginCameraZ;
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame 
+    void Update()
+    {
         float newX = player.transform.position.x;
         float newZ = player.transform.position.z;
 
-        if ( newZ < minCameraZ || newZ > maxCameraZ)
+        if (newZ < minCameraZ || newZ > maxCameraZ)
         {
             transform.position = new Vector3(newX, transform.position.y, transform.position.z);
         }
@@ -29,5 +35,5 @@ public class CameraPlayer : MonoBehaviour  {
         {
             transform.position = new Vector3(newX, transform.position.y, newZ);
         }
-	}
+    }
 }
