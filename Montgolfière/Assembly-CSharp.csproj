@@ -51,6 +51,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\CameraPlayer.cs" />
+     <Compile Include="Assets\Scripts\Damageable.cs" />
      <Compile Include="Assets\Scripts\InputManager.cs" />
      <Compile Include="Assets\Scripts\Intemperie.cs" />
      <Compile Include="Assets\Scripts\MenuManager.cs" />
