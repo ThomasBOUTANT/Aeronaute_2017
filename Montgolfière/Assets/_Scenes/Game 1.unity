@@ -622,6 +622,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 453723583}
+  minZ: -10
+  maxZ: 10
 --- !u!1 &1319875253
 GameObject:
   m_ObjectHideFlags: 0
