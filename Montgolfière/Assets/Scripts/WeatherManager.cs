@@ -19,6 +19,8 @@ public class WeatherManager : MonoBehaviour {
     [SerializeField]
     private float margin;
 
+    private AudioSource audiosourcePlayer;
+
 
     // Use this for initialization
     void Start () {
@@ -30,6 +32,8 @@ public class WeatherManager : MonoBehaviour {
         {
             intemperies[j].SetActive(false);
         }
+        audiosourcePlayer = player.GetComponent<AudioSource>();
+
 
     }
 	
@@ -42,7 +46,10 @@ public class WeatherManager : MonoBehaviour {
 
         currentDistance = player.GetComponent<PlayerMovement>().GetCurrentDistance();
 
-        CheckIntemperies();
+        if ( CheckIntemperies() == -1 ) //s'il n'y a pas d'intemperies
+        {
+            audiosourcePlayer.mute = false;
+        }
 		
 	}
 
@@ -50,7 +57,7 @@ public class WeatherManager : MonoBehaviour {
     {
         int i = -1;
 
-        for(int j = 0; j < nb_intemperies; j++)
+        for (int j = 0; j < nb_intemperies; j++)
         {
             if (!intemperies[j].activeSelf
                 && intemperies[j].GetComponent<Intemperie>().GetAppearingDistance() < currentDistance + margin
@@ -72,8 +79,9 @@ public class WeatherManager : MonoBehaviour {
                 || intemperies[j].GetComponent<Intemperie>().GetAppearingDistance() < currentDistance - margin)
                 {
                     intemperies[j].SetActive(false);
-                } else if(intemperies[j].GetComponent<Intemperie>().GetAppearingDistance() < currentDistance + margin/3
-                     && intemperies[j].GetComponent<Intemperie>().GetAppearingDistance() > currentDistance - margin/3)
+                }
+                else if (intemperies[j].GetComponent<Intemperie>().GetAppearingDistance() < currentDistance + margin / 3
+                   && intemperies[j].GetComponent<Intemperie>().GetAppearingDistance() > currentDistance - margin / 3)
                 {
                     player.GetComponent<PlayerMovement>().SetBaseSpeed(intemperies[j].GetComponent<Intemperie>().GetBaseSpeed());
                     intemperies[j].GetComponent<Intemperie>().TouchPlayer(player.GetComponent<PlayerMovement>());
@@ -83,6 +91,7 @@ public class WeatherManager : MonoBehaviour {
             {
                 player.GetComponent<PlayerMovement>().SetBaseSpeed(25);
             }
+
         }
         return i;
     }

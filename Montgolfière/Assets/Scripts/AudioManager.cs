@@ -10,24 +10,29 @@ public class AudioManager : MonoBehaviour {
     [SerializeField]
     private bool blockMusic;
 
+    private AudioSource audiosourcePlayer;
     private AudioSource audiosource;
 
-	// Use this for initialization
-	void Start () {
-        audiosource = player.GetComponent<AudioSource>();
+    // Use this for initialization
+    void OnEnable () {
+        audiosourcePlayer = player.GetComponent<AudioSource>();
+        audiosource = GetComponent<AudioSource>();
+        audiosource.volume = 0;
     }
 	
 	// Update is called once per frame
 	void Update () {
 
+        audiosource.volume += 0.1f * Time.deltaTime ;
+
         if (blockMusic)
         {
-            audiosource.mute = true;
+            audiosourcePlayer.mute = true;
         }
         else
         {
-            audiosource.mute = false;
+            audiosourcePlayer.mute = false;
         }
-		
+
 	}
 }
