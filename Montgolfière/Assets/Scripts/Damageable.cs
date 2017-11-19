@@ -28,8 +28,8 @@ public class Damageable : MonoBehaviour {
 	void Start () {
         state = 0;
 	}
-	
-	// Update is called once per frame
+	/*
+	// Update is called once per frame/*
 	void Update () {
         
         //Changements d'états qui conduiront à un changment de sprite
@@ -42,6 +42,29 @@ public class Damageable : MonoBehaviour {
 
         }
 	}
+    */
+    void Update()
+    {
+
+
+        if (stages.Length != 0)
+        {
+            //Changements d'états qui conduiront à un changement de sprite
+            if ((state < stages.Length) && (healthPoints < stages[state]))
+            {
+                //Debug.Log(stages[0]);
+                ChoseSprite(state);
+                state++;
+                player.Damaged(type);
+            }
+            else if ((state > 0) && (state < stages.Length) && (healthPoints > stages[state-1]))
+            {
+                state--;
+                ChoseSprite(state);
+
+            }
+        }
+    }
 
     public void HealTo(float heal)
     {

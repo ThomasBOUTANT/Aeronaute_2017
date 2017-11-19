@@ -27,7 +27,7 @@ public class CameraPlayer : MonoBehaviour
         float newX = player.transform.position.x;
         float newZ = player.transform.position.z;
         float newY = transform.position.y;
-
+        /*
         if (Input.GetButtonDown("Fire1"))
         {
             newY -= 10;
@@ -35,7 +35,7 @@ public class CameraPlayer : MonoBehaviour
         else if (Input.GetButtonDown("Fire2"))
         {
             newY += 10;
-        }
+        }*/
 
         if (newZ < minCameraZ || newZ > maxCameraZ)
         {

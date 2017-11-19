@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 
 //Class générique pour gérer les valeur incrémentales par palier fixe
@@ -32,7 +33,7 @@ public enum Damageables { Sail,Flame,Nacelle,Lest}
 
 public class PlayerMovement : MonoBehaviour {
     [SerializeField]
-    private float angle,fioulInit,fioulConso;
+    private float angle,fioulInit, fioulConso,screenFadingTime, timer;
     [SerializeField]
     private Incrementable speedIncr,burnerIncr,hotAirIncr;
     private float speed,speedMin = 0.1f,minBurn=0.01f;
@@ -40,7 +41,10 @@ public class PlayerMovement : MonoBehaviour {
     [SerializeField]
     private float baseSpeed, baseBurner,scaleAlt,baseCoefLat;
     private float fioul,hotAir;
-
+    [SerializeField]
+    private GameObject blackScreen;
+    [SerializeField]
+    private Color blackscreenColor;
     [SerializeField]
     private float minPlayerZ, maxPlayerZ;
 
@@ -49,7 +53,10 @@ public class PlayerMovement : MonoBehaviour {
     private Damageable burner;
     private Damageable lest;
 
+    private int result;
 
+    [SerializeField]
+    private string[] scenes;
     void Start () {
         burner = components[(int)Damageables.Flame];
         lest = components[(int)Damageables.Lest];
@@ -103,6 +110,7 @@ public class PlayerMovement : MonoBehaviour {
 
             if(minPlayerZ > newZ || newZ > maxPlayerZ)
             {
+                hotAir = 0;
                 transform.position = new Vector3(newX, transform.position.y, transform.position.z);
             }
             else
@@ -118,6 +126,25 @@ public class PlayerMovement : MonoBehaviour {
             else if (!isBurning)
             {
                 hotAir = 0;
+            }
+
+            if (fioul == 0)
+            {
+
+                if (timer < screenFadingTime)
+                {
+                    timer += Time.deltaTime;
+                    float blend = Mathf.Clamp01(timer / screenFadingTime);
+                    blackscreenColor.a = Mathf.Lerp(0.0f, 1.0f, blend);
+
+                    // Apply the resulting color to the material.
+                    blackScreen.GetComponent<MeshRenderer>().material.SetColor("_Color", blackscreenColor);
+                }
+                else
+                {
+                    //Debug.Log(result);
+                    SceneManager.LoadScene(scenes[result + 2]);
+                }
             }
         }
 
@@ -187,6 +214,7 @@ public class PlayerMovement : MonoBehaviour {
 
     public void Damages(Damageables type ,float ammount)
     {
+        Debug.Log("Im getting damaged by :" + type);
         components[(int)type].DamagesTo(ammount);
     }
 
@@ -233,5 +261,17 @@ public class PlayerMovement : MonoBehaviour {
     public float GetMaxPlayerZ()
     {
         return maxPlayerZ;
+    }
+
+    public float GetHeight()
+    {
+        return transform.position.z;
+    }
+
+
+
+    public void Inclination(int _i)
+    {
+        result += _i;
     }
 }
