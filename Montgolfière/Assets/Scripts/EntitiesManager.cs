@@ -17,7 +17,7 @@ public class EntitiesManager : MonoBehaviour {
     private float margin;
 
     // Use this for initialization
-    void Start () {
+    void Awake () {
 
         nb_entities = entities.Length;
         player = GameObject.FindGameObjectWithTag("Player");
@@ -70,23 +70,25 @@ public class EntitiesManager : MonoBehaviour {
 
             else if (entities[j].activeSelf)
             {
-                if (Time.time > timer + entities[j].GetComponent<Entity>().GetStayingTime())
+                if (Time.time > timer + entities[j].GetComponent<Entity>().GetStayingTime() && entities[j].GetComponent<Entity>().IsFriend() == 0)
                 {
-                    if (Input.GetKey(KeyCode.Space))
+                    if (Input.GetButton("Fire1"))
                     {
                         //Pacte avec l'entité
+                        entities[j].GetComponent<Entity>().DisableText();
                         entities[j].GetComponent<Entity>().SetIsFriend(-1);
                         player.GetComponent<PlayerMovement>().Inclination(-1);
                         player.GetComponent<PlayerMovement>().SetEntityWatching(false);
-                        entities[j].GetComponent<Entity>().DisableText();
+
                     }
-                    else if (Input.GetAxis("Horizontal") != 0)
+                    else if (Input.GetButton("Fire2"))
                     {
                         //Pas de pacte avec l'entité
+                        entities[j].GetComponent<Entity>().DisableText();
                         entities[j].GetComponent<Entity>().SetIsFriend(1);
                         player.GetComponent<PlayerMovement>().Inclination(1);
                         player.GetComponent<PlayerMovement>().SetEntityWatching(false);
-                        entities[j].GetComponent<Entity>().DisableText();
+
                     }
                 }
                 else if (entities[j].GetComponent<Entity>().IsFriend() != 0)

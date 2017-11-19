@@ -21,12 +21,19 @@ public class MenuManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+        if (Input.GetButton("Fire1"))
+        {
+            StartGame();
+        }
+        else if (Input.GetButton("Jump"))
+        {
+            QuitGame();
+        }
 	}
 
     public void StartGame()
     {
-        SceneManager.LoadScene("Main", LoadSceneMode.Single);
+        SceneManager.LoadScene("Game 3", LoadSceneMode.Single);
     }
 
     public void QuitGame()

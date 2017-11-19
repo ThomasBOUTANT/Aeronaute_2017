@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 
 //Class générique pour gérer les valeur incrémentales par palier fixe
@@ -51,7 +52,8 @@ public class PlayerMovement : MonoBehaviour {
 
     private int result;
 
-
+    [SerializeField]
+    private string[] scenes;
     void Start () {
         burner = components[(int)Damageables.Flame];
         lest = components[(int)Damageables.Lest];
@@ -121,6 +123,12 @@ public class PlayerMovement : MonoBehaviour {
             else if (!isBurning)
             {
                 hotAir = 0;
+            }
+
+            if (fioul == 0)
+            {
+                Debug.Log(result);
+                SceneManager.LoadScene(scenes[result+2]);
             }
         }
 

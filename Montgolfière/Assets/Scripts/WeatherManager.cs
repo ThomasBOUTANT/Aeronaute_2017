@@ -72,8 +72,8 @@ public class WeatherManager : MonoBehaviour {
                 || intemperies[j].GetComponent<Intemperie>().GetAppearingDistance() < currentDistance - margin)
                 {
                     intemperies[j].SetActive(false);
-                } else if(intemperies[j].GetComponent<Intemperie>().GetAppearingDistance() < currentDistance + margin/2
-                     && intemperies[j].GetComponent<Intemperie>().GetAppearingDistance() > currentDistance - margin/2)
+                } else if(intemperies[j].GetComponent<Intemperie>().GetAppearingDistance() < currentDistance + margin/3
+                     && intemperies[j].GetComponent<Intemperie>().GetAppearingDistance() > currentDistance - margin/3)
                 {
                     player.GetComponent<PlayerMovement>().SetBaseSpeed(intemperies[j].GetComponent<Intemperie>().GetBaseSpeed());
                     intemperies[j].GetComponent<Intemperie>().TouchPlayer(player.GetComponent<PlayerMovement>());

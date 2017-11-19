@@ -14,8 +14,10 @@ public class Entity : MonoBehaviour {
 
     //Object donné si l'on pactise avec l'entité
     [SerializeField]
-    private GameObject givenComponent, entityText, childFG, childBG;
+    private GameObject givenComponent, entityTextA,entityTextB, childFG, childBG;
 
+    [SerializeField]
+    private string[] entityProp1,entityProp2;
 
     [SerializeField]
     private WeatherManager wheaterManager;
@@ -33,9 +35,11 @@ public class Entity : MonoBehaviour {
     [SerializeField]
     private int isFriend;
 
+    private bool disabledText;
+
     // Use this for initialization
-    void Start () {
-        entityText.SetActive(false);
+    void Awake () {
+        //entityTextA.SetActive(false);
         meshRendererFG = childFG.GetComponent<MeshRenderer>();
         meshRendererBG = childBG.GetComponent<MeshRenderer>();
         isFriend = 0;
@@ -43,6 +47,7 @@ public class Entity : MonoBehaviour {
         entityColorBG = childBG.GetComponent<MeshRenderer>().material.color;
         time = 0;
         entityLightIntensity = entityLight.intensity;
+        disabledText = false;
 
     }
 
@@ -74,19 +79,41 @@ void Update () {
             entityLight.intensity = entityLightIntensity;
 
         }
-        if (gameObject.activeSelf)
+        if (gameObject.activeSelf && !disabledText)
         {
-            entityText.SetActive(true);
+            string propA = "A:" ;
+            string propB="B:";
+            int i = 0;
+
+            entityTextA.SetActive(true);
+            for (i = 0; i < entityProp1.Length; i++)
+            {
+                propA = propA + entityProp1[i] + "\n";
+            }
+            entityTextA.GetComponent<Text>().text = propA;
+
+
+            entityTextB.SetActive(true);
+            for (i = 0; i < entityProp2.Length; i++)
+            {
+                propB = propB + entityProp2[i] + "\n";
+            }
+            entityTextB.GetComponent<Text>().text = propB;
         }
         else
         {
-            entityText.SetActive(false);
+
+            //entityText.SetActive(false);
+            entityTextA.GetComponent<Text>().text = " ";
+            entityTextB.GetComponent<Text>().text = " ";
         }
 		
 	}
 
     public float GetAppearingDistance()
     {
+        entityTextA.SetActive(true);
+        entityTextB.SetActive(true);
         return appearingDistance;
     }
 
@@ -111,8 +138,10 @@ void Update () {
 
     public void DisableText()
     {
-        Debug.Log("j'essaie de desactiver le text");
-        entityText.SetActive(false);
+        disabledText = true;
+        entityTextA.GetComponent<Text>().text = " ";
+        entityTextB.GetComponent<Text>().text = " ";
+        //entityText.SetActive(false);
     }
 
 

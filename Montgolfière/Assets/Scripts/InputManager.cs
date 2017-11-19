@@ -19,7 +19,7 @@ public class InputManager : MonoBehaviour {
         float moveVertical = Input.GetAxis("Vertical");
         GetComponent<PlayerMovement>().Burn(moveVertical);
 
-        if (Input.GetButton("Fire1") && timerLest < Time.time)
+        if (Input.GetButton("Fire3") && timerLest < Time.time)
         {
             GetComponent<PlayerMovement>().LacherLest();
             timerLest = Time.time + delayLest;

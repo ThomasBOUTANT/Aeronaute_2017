@@ -31,7 +31,7 @@ public class Intemperie : MonoBehaviour {
     private float appearingDistance;
 
 	// Use this for initialization
-	void Start () {
+	void Awake() {
         disabled = false;
         appearingDistance = transform.position.x;
         timerDamages = Time.time;
