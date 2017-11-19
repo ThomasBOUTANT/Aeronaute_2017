@@ -11,3 +11,15 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Scenes/Game.unity
     guid: 614bc57eb8ca96043ace506a640e1717
+  - enabled: 1
+    path: Assets/_Scenes/ChaoticMax.unity
+    guid: d068460df231fc64ba2e9d1adab6f4e0
+  - enabled: 1
+    path: Assets/_Scenes/ChaoticPart.unity
+    guid: c408143d50d4b8e40867a8610e5e55b2
+  - enabled: 1
+    path: Assets/_Scenes/PacificMax.unity
+    guid: 457eb37918be704438cae225e0c0e19e
+  - enabled: 1
+    path: Assets/_Scenes/PacificPart.unity
+    guid: 47edcac3f756acc4495939b7811d13a0

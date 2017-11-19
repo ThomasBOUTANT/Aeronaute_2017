@@ -55,6 +55,7 @@ public class EntitiesManager : MonoBehaviour {
             if (!entities[j].activeSelf
                 && entities[j].GetComponent<Entity>().GetAppearingDistance() < currentDistance + margin
                 && entities[j].GetComponent<Entity>().GetAppearingDistance() > currentDistance - margin
+                && entities[j].GetComponent<Entity>().IsFriend() == 0
                 )
             {
                 //On active l'entity à l'endroit du joueur

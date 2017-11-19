@@ -9,7 +9,8 @@ public class Entity : MonoBehaviour {
     private WeatherType type;
 
     [SerializeField]
-    private float appearingDistance, stayingTime, startingTime,fadingTime, time;
+    private float appearingDistance, stayingTime, startingTime,fadingTime;
+    private float time;
     //private Intemperie appearingIntemperie;
 
     //Object donné si l'on pactise avec l'entité
@@ -45,7 +46,7 @@ public class Entity : MonoBehaviour {
         isFriend = 0;
         entityColorFG = childFG.GetComponent<MeshRenderer>().material.color;
         entityColorBG = childBG.GetComponent<MeshRenderer>().material.color;
-        time = 0;
+        time = -1;
         entityLightIntensity = entityLight.intensity;
         disabledText = false;
 
@@ -153,23 +154,36 @@ void Update () {
 
     public void Disappear()
     {
-        time = 0;
-        if (time < fadingTime)
-        {
-            time += Time.deltaTime;
-            float blend = Mathf.Clamp01(time / fadingTime);
-            entityColorFG.a = Mathf.Lerp(1.0f, 0.0f, blend);
-            entityColorBG.a = Mathf.Lerp(1.0f, 0.0f, blend);
-            entityLightIntensity = entityLightIntensity - 0.001f;
 
-            // Apply the resulting color to the material.
-            meshRendererFG.material.SetColor("_Color", entityColorFG);
-            meshRendererBG.material.SetColor("_Color", entityColorBG);
-            entityLight.intensity = entityLightIntensity;
+        //gameObject.SetActive(false);
+        
+        if (time == -1)
+        {
+            time = 0;
         }
         else
         {
-            gameObject.SetActive(false);
+            if (time < fadingTime)
+            {
+                time += Time.deltaTime;
+                float blend = Mathf.Clamp01(time / fadingTime);
+
+                entityColorFG.a = Mathf.Lerp(1.0f, 0.0f, blend);
+                entityColorBG.a = Mathf.Lerp(1.0f, 0.0f, blend);
+
+                entityLightIntensity = entityLightIntensity - 0.01f;
+
+                // Apply the resulting color to the material.
+                meshRendererFG.material.SetColor("_Color", entityColorFG);
+                meshRendererBG.material.SetColor("_Color", entityColorBG);
+
+                entityLight.intensity = entityLightIntensity;
+            }
+            else
+            {
+                gameObject.SetActive(false);
+            }
         }
+       
     }
 }

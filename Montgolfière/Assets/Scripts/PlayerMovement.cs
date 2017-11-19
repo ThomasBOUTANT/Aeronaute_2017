@@ -33,7 +33,7 @@ public enum Damageables { Sail,Flame,Nacelle,Lest}
 
 public class PlayerMovement : MonoBehaviour {
     [SerializeField]
-    private float angle,fioulInit,fioulConso;
+    private float angle,fioulInit, fioulConso,screenFadingTime, timer;
     [SerializeField]
     private Incrementable speedIncr,burnerIncr,hotAirIncr;
     private float speed,speedMin = 0.1f,minBurn=0.01f;
@@ -41,7 +41,10 @@ public class PlayerMovement : MonoBehaviour {
     [SerializeField]
     private float baseSpeed, baseBurner,scaleAlt,baseCoefLat;
     private float fioul,hotAir;
-
+    [SerializeField]
+    private GameObject blackScreen;
+    [SerializeField]
+    private Color blackscreenColor;
     [SerializeField]
     private float minPlayerZ, maxPlayerZ;
 
@@ -127,8 +130,21 @@ public class PlayerMovement : MonoBehaviour {
 
             if (fioul == 0)
             {
-                Debug.Log(result);
-                SceneManager.LoadScene(scenes[result+2]);
+
+                if (timer < screenFadingTime)
+                {
+                    timer += Time.deltaTime;
+                    float blend = Mathf.Clamp01(timer / screenFadingTime);
+                    blackscreenColor.a = Mathf.Lerp(0.0f, 1.0f, blend);
+
+                    // Apply the resulting color to the material.
+                    blackScreen.GetComponent<MeshRenderer>().material.SetColor("_Color", blackscreenColor);
+                }
+                else
+                {
+                    //Debug.Log(result);
+                    SceneManager.LoadScene(scenes[result + 2]);
+                }
             }
         }
 
